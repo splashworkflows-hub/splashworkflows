@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Done-for-You Automation for UK Law Firms | Splash Workflows</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink: #0a0a08;
+  --parchment: #f5eedc;
+  --cream: #fdf8ee;
+  --warm: #fff8e7;
+  --gold: #b8973a;
+  --gold-light: #d4af5a;
+  --gold-dim: rgba(184,151,58,0.15);
+  --rule: rgba(10,10,8,0.12);
+  --rule-gold: rgba(184,151,58,0.3);
+  --text: #1a1a16;
+  --text-dim: #6b6b60;
+  --text-faint: #9e9e90;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── NOISE TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  opacity: 0.6;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 20px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(250,248,244,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 400;
+  letter-spacing: 0.5px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--gold); }
+
+.nav-links {
+  display: flex; align-items: center; gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 13px; font-weight: 400; letter-spacing: 0.3px;
+  color: var(--text-dim); text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--ink); }
+
+.nav-cta {
+  padding: 10px 24px;
+  background: var(--ink);
+  color: var(--cream) !important;
+  border-radius: 2px;
+  font-size: 13px !important;
+  letter-spacing: 0.5px;
+  transition: background 0.2s !important;
+}
+.nav-cta:hover { background: #2a2a22 !important; color: var(--cream) !important; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 120px 48px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-rule {
+  width: 1px; height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--gold));
+  margin: 0 auto 48px;
+  animation: fadeIn 1s ease forwards;
+}
+
+.hero-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+  animation: fadeUp 0.8s ease 0.2s both;
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(48px, 7vw, 96px);
+  font-weight: 300; line-height: 1.05;
+  letter-spacing: -1px;
+  color: var(--ink);
+  max-width: 900px;
+  animation: fadeUp 0.8s ease 0.3s both;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 400;
+}
+
+.hero-sub {
+  font-size: 16px; font-weight: 300; line-height: 1.7;
+  color: var(--text-dim); max-width: 520px;
+  margin: 28px auto 0;
+  animation: fadeUp 0.8s ease 0.4s both;
+}
+
+.hero-cta-wrap {
+  margin: 36px auto 48px;
+  animation: fadeUp 0.8s ease 0.45s both;
+}
+
+.hero-stats {
+  display: flex; gap: 64px; justify-content: center;
+  margin-bottom: 56px;
+  animation: fadeUp 0.8s ease 0.5s both;
+}
+.stat { text-align: center; }
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 40px; font-weight: 300;
+  color: var(--ink); line-height: 1;
+}
+.stat-num span { color: var(--gold); font-size: 24px; }
+.stat-label {
+  font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text-faint); margin-top: 6px;
+}
+
+.hero-btns {
+  display: flex; gap: 16px; justify-content: center;
+  animation: fadeUp 0.8s ease 0.6s both;
+}
+.btn-primary {
+  padding: 14px 36px;
+  background: var(--ink); color: var(--cream);
+  font-size: 13px; letter-spacing: 0.5px;
+  border: none; border-radius: 2px;
+  cursor: pointer; text-decoration: none;
+  transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { background: var(--gold); }
+.btn-outline {
+  padding: 14px 36px;
+  background: none; color: var(--ink);
+  font-size: 13px; letter-spacing: 0.5px;
+  border: 1px solid var(--rule); border-radius: 2px;
+  cursor: pointer; text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ── SECTION COMMONS ── */
+section { position: relative; z-index: 1; }
+
+.section-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 300; line-height: 1.15;
+  color: var(--ink);
+}
+
+.divider {
+  width: 48px; height: 1px;
+  background: var(--gold);
+  margin: 20px 0;
+}
+
+/* ── USE CASES ── */
+.usecases {
+  padding: 120px 48px;
+  background: var(--parchment);
+  border-top: 1px solid var(--rule);
+}
+
+.usecases-header {
+  max-width: 1100px; margin: 0 auto 80px;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  flex-wrap: wrap; gap: 24px;
+}
+
+.total-value {
+  text-align: right;
+}
+.total-value-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 48px; font-weight: 300; color: var(--gold); line-height: 1;
+}
+.total-value-label { font-size: 12px; color: var(--text-dim); letter-spacing: 0.5px; }
+
+.cases-grid {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2px;
+}
+
+.case-card {
+  background: var(--cream);
+  padding: 40px 36px;
+  border: 1px solid var(--rule);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+.case-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s;
+}
+.case-card:hover { background: #fff; box-shadow: 0 8px 32px rgba(0,0,0,0.06); }
+.case-card:hover::before { transform: scaleX(1); }
+
+.case-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-faint); margin-bottom: 20px;
+}
+
+.case-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-weight: 400; line-height: 1.2;
+  color: var(--ink); margin-bottom: 12px;
+}
+
+.case-saving {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px; color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.case-desc {
+  font-size: 14px; line-height: 1.7;
+  color: var(--text-dim); margin-bottom: 28px;
+}
+
+.case-steps {
+  list-style: none;
+  border-top: 1px solid var(--rule);
+  padding-top: 20px;
+}
+.case-steps li {
+  font-size: 12px; color: var(--text-dim);
+  padding: 6px 0;
+  display: flex; align-items: flex-start; gap: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+.case-steps li:last-child { border-bottom: none; }
+.case-steps li::before {
+  content: '→';
+  color: var(--gold); font-size: 11px;
+  flex-shrink: 0; margin-top: 1px;
+}
+
+/* ── HOW IT WORKS ── */
+.process {
+  padding: 120px 48px;
+  background: var(--cream);
+  border-top: 1px solid var(--rule);
+}
+.process-inner { max-width: 900px; margin: 0 auto; }
+.process-header { margin-bottom: 72px; }
+
+.process-steps {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 48px 64px;
+}
+.process-step { position: relative; }
+.step-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 64px; font-weight: 300;
+  color: var(--gold-dim); line-height: 1;
+  margin-bottom: -16px;
+}
+.step-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 400;
+  color: var(--ink); margin-bottom: 10px;
+}
+.step-desc { font-size: 14px; line-height: 1.7; color: var(--text-dim); }
+
+/* ── PRICING ── */
+.pricing {
+  padding: 120px 48px;
+  background: var(--ink);
+  color: var(--cream);
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.pricing-inner { max-width: 1100px; margin: 0 auto; }
+
+.pricing-header { margin-bottom: 72px; }
+.pricing-header .section-title { color: var(--cream); }
+.pricing-header .section-tag { color: var(--gold); }
+.pricing-header p {
+  font-size: 15px; color: rgba(250,248,244,0.5);
+  margin-top: 16px; max-width: 480px; line-height: 1.7;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.plan {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 48px 36px;
+  position: relative;
+  transition: all 0.3s;
+}
+.plan:hover { background: rgba(255,255,255,0.07); }
+
+.plan.featured {
+  background: var(--gold-dim);
+  border-color: var(--rule-gold);
+}
+.plan.featured::after {
+  content: 'MOST POPULAR';
+  position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--ink);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  padding: 5px 14px;
+}
+
+.plan-tier {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 8px;
+}
+.plan-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 300;
+  color: var(--cream); margin-bottom: 4px;
+}
+.plan-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px; font-weight: 300; line-height: 1;
+  color: var(--cream); margin: 20px 0 4px;
+}
+.plan-price span { font-size: 18px; color: rgba(250,248,244,0.5); }
+.plan-price-sub {
+  font-size: 12px; color: rgba(250,248,244,0.4);
+  margin-bottom: 28px; letter-spacing: 0.3px;
+}
+
+.plan-divider {
+  height: 1px; background: rgba(255,255,255,0.08);
+  margin: 28px 0;
+}
+
+.plan-features {
+  list-style: none; margin-bottom: 36px;
+}
+.plan-features li {
+  font-size: 13px; color: rgba(250,248,244,0.7);
+  padding: 7px 0;
+  display: flex; align-items: flex-start; gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.plan-features li:last-child { border-bottom: none; }
+.plan-features li::before {
+  content: '✓';
+  color: var(--gold); font-size: 11px;
+  flex-shrink: 0; margin-top: 2px;
+}
+
+.plan-btn {
+  width: 100%; padding: 13px;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; letter-spacing: 0.5px;
+  cursor: pointer; border-radius: 2px;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: block; text-align: center;
+}
+.plan-btn:hover { border-color: var(--gold); color: var(--gold); }
+.plan.featured .plan-btn {
+  background: var(--gold); border-color: var(--gold);
+  color: var(--ink);
+}
+.plan.featured .plan-btn:hover { background: var(--gold-light); }
+
+/* ── ONBOARDING ── */
+.onboarding {
+  padding: 120px 48px;
+  background: var(--parchment);
+  border-top: 1px solid var(--rule);
+}
+.onboarding-inner { max-width: 900px; margin: 0 auto; }
+.onboarding-header { margin-bottom: 64px; }
+
+.onboarding-timeline {
+  position: relative;
+  padding-left: 48px;
+}
+.onboarding-timeline::before {
+  content: '';
+  position: absolute; left: 8px; top: 8px; bottom: 8px;
+  width: 1px; background: var(--rule-gold);
+}
+
+.timeline-item {
+  position: relative; margin-bottom: 48px;
+}
+.timeline-dot {
+  position: absolute; left: -44px; top: 4px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--cream); border: 1px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+}
+.timeline-dot::after {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold);
+}
+
+.timeline-week {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 6px;
+}
+.timeline-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 400;
+  color: var(--ink); margin-bottom: 8px;
+}
+.timeline-desc { font-size: 14px; color: var(--text-dim); line-height: 1.7; }
+
+/* ── CTA ── */
+.cta-section {
+  padding: 120px 48px;
+  background: var(--cream);
+  text-align: center;
+  border-top: 1px solid var(--rule);
+}
+.cta-rule { width: 1px; height: 60px; background: var(--gold); margin: 0 auto 40px; }
+.cta-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 5vw, 64px); font-weight: 300;
+  line-height: 1.1; color: var(--ink); max-width: 700px;
+  margin: 0 auto 20px;
+}
+.cta-title em { font-style: italic; color: var(--gold); }
+.cta-sub { font-size: 15px; color: var(--text-dim); margin-bottom: 40px; line-height: 1.6; }
+
+/* ── FOOTER ── */
+footer {
+  padding: 32px 48px;
+  border-top: 1px solid var(--rule);
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--cream);
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; color: var(--ink);
+}
+.footer-logo span { color: var(--gold); }
+.footer-copy { font-size: 12px; color: var(--text-faint); }
+
+/* ── ONBOARDING FORM ── */
+.form-section {
+  padding: 80px 48px;
+  background: var(--ink);
+}
+.form-inner {
+  max-width: 640px; margin: 0 auto;
+}
+.form-header { margin-bottom: 48px; }
+.form-header .section-title { color: var(--cream); }
+.form-header .section-tag { color: var(--gold); }
+.form-header p { font-size: 14px; color: rgba(250,248,244,0.5); margin-top: 12px; line-height: 1.7; }
+
+.form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(250,248,244,0.4);
+}
+.form-input, .form-select, .form-textarea {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--cream);
+  padding: 12px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 300;
+  border-radius: 2px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--gold);
+}
+.form-input::placeholder, .form-textarea::placeholder { color: rgba(250,248,244,0.2); }
+.form-select option { background: #1a1a16; }
+.form-textarea { resize: vertical; min-height: 100px; }
+.form-submit {
+  width: 100%; padding: 14px;
+  background: var(--gold); border: none;
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
+  cursor: pointer; border-radius: 2px;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+.form-submit:hover { background: var(--gold-light); }
+
+.form-success {
+  display: none;
+  text-align: center; padding: 48px;
+  color: var(--cream);
+}
+.form-success-icon {
+  font-size: 40px; margin-bottom: 16px;
+}
+.form-success h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 300; margin-bottom: 8px;
+}
+.form-success p { font-size: 14px; color: rgba(250,248,244,0.5); }
+
+/* ── SCRIPT EMPHASIS ── */
+.script-em {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-style: italic !important;
+  font-weight: 300;
+  font-size: 1.15em;
+  color: var(--gold);
+  letter-spacing: 0.5px;
+}
+
+/* ── PHILOSOPHY STRIP ── */
+.philosophy {
+  padding: 80px 48px;
+  background: var(--warm);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  text-align: center;
+}
+.philosophy-inner { max-width: 760px; margin: 0 auto; }
+.philosophy-script {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 52px);
+  color: var(--gold);
+  line-height: 1.3;
+  margin-bottom: 20px;
+}
+.philosophy-body {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(17px, 2.2vw, 22px);
+  font-weight: 300;
+  color: var(--text-dim);
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto 32px;
+}
+.philosophy-pillars {
+  display: flex; gap: 48px; justify-content: center;
+  flex-wrap: wrap; margin-top: 40px;
+}
+.pillar {
+  text-align: center;
+}
+.pillar-icon {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 26px;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.pillar-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+.nav-hamburger { display: none; }
+
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex; flex-direction: column;
+    position: fixed; top: 57px; left: 0; right: 0;
+    background: rgba(250,248,244,0.97);
+    backdrop-filter: blur(12px);
+    padding: 24px;
+    gap: 0;
+    border-bottom: 1px solid var(--rule);
+    z-index: 99;
+  }
+  .nav-links.open li { border-bottom: 1px solid var(--rule); }
+  .nav-links.open a { display: block; padding: 14px 0; font-size: 15px; color: var(--text); }
+  .nav-links.open .nav-cta { margin-top: 12px; text-align: center; padding: 12px; }
+  .nav-hamburger {
+    display: flex; flex-direction: column; justify-content: center; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px;
+  }
+  .nav-hamburger span {
+    display: block; width: 22px; height: 1.5px;
+    background: var(--ink); transition: all 0.25s;
+  }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+  .hero { padding: 100px 24px 60px; }
+  .hero-stats { gap: 32px; flex-wrap: wrap; }
+  .usecases, .process, .pricing, .onboarding, .cta-section, .form-section { padding: 80px 24px; }
+  .cases-grid { grid-template-columns: 1fr; }
+  .plans-grid { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  footer { padding: 24px; flex-direction: column; text-align: center; }
+}
+
+/* ── LEGAL MODALS ── */
+.legal-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.legal-modal-overlay.open { display: flex; }
+.legal-modal {
+  background: var(--cream);
+  color: var(--ink);
+  max-width: 680px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 4px;
+  padding: 48px 40px;
+  position: relative;
+}
+.legal-modal h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 24px;
+  color: var(--ink);
+}
+.legal-modal h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 24px 0 8px;
+  color: var(--ink);
+}
+.legal-modal p, .legal-modal li {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+.legal-modal ul { padding-left: 20px; }
+.legal-modal-close {
+  position: absolute;
+  top: 16px; right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-faint);
+}
+.footer-legal a {
+  color: var(--text-faint);
+  text-decoration: none;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  margin: 0 8px;
+}
+.footer-legal a:hover { color: var(--gold); }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Splash <span>Workflows</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#solutions">Solutions</a></li>
+    <li><a href="#process">How It Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#onboard" class="nav-cta">Get Started</a></li>
+  </ul>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-rule"></div>
+  <p class="hero-tag">AI Automation for UK Law Firms</p>
+  <h1 class="hero-title">Your people came into law<br>to help <em class="script-em">people</em></h1>
+  <p class="hero-sub">Not to spend their days buried in paperwork. We build done-for-you AI systems that give your fee earners their time back, so they can do the work that actually matters.</p>
+
+  <div class="hero-cta-wrap">
+    <a href="https://tally.so/r/5BMGLE" class="btn-primary" style="font-size:15px; padding:16px 44px; letter-spacing:0.6px;">Get Your Free Intake Workflow Review →</a>
+    <p style="font-size:12px; color:var(--text-faint); margin-top:12px; letter-spacing:0.3px;">No sales call. No obligation. We map your current enquiry process and show you exactly where time is being lost.</p>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">60<span>%+</span></div>
+      <div class="stat-label">Of admin is automatable</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">8<span>+</span></div>
+      <div class="stat-label">Hours saved / fee earner / week</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">30</div>
+      <div class="stat-label">Days from signed to live</div>
+    </div>
+  </div>
+
+  <div class="hero-btns">
+    <a href="#solutions" class="btn-primary">See the workflows →</a>
+    <a href="#pricing" class="btn-outline">View pricing</a>
+  </div>
+</section>
+
+<!-- PHILOSOPHY STRIP -->
+<section class="philosophy">
+  <div class="philosophy-inner">
+    <div class="philosophy-script reveal">The best technology protects what makes you great</div>
+    <p class="philosophy-body reveal">
+      Great legal service is built on trust, expertise, and genuine care for the people who walk through your door. Technology should never replace that. It should protect it. When your team is free from repetitive admin, they show up fully for the people who need them most.
+    </p>
+    <div class="philosophy-pillars reveal">
+      <div class="pillar">
+        <div class="pillar-icon">Personal</div>
+        <div class="pillar-label">Human first</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">Careful</div>
+        <div class="pillar-label">Built with intention</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">Trusted</div>
+        <div class="pillar-label">Built for law firms</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section class="usecases" id="solutions">
+  <div class="usecases-header reveal">
+    <div>
+      <p class="section-tag">Five AI Workflows</p>
+      <h2 class="section-title">Every hour your team loses<br>to admin, we give back</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="total-value">
+      <div class="total-value-num" style="font-size:28px;line-height:1.3;">Hours back.<br>Every week.</div>
+      <div class="total-value-label" style="margin-top:8px;">Five workflows built for firms of 6 to 15 staff</div>
+    </div>
+  </div>
+
+  <div class="cases-grid">
+    <div class="case-card reveal">
+      <div class="case-num">01 / 05</div>
+      <div class="case-title">Automated Billing &amp; Time Capture</div>
+      <div class="case-saving">Recovers hours of missed billing every week</div>
+      <p class="case-desc">Our AI works silently as attorneys work, drafting billable time entries from emails, calendar, documents, and phone logs. Auto-matched to matter codes and LEDES formatted.</p>
+      <ul class="case-steps">
+        <li>Monitors Gmail, Calendar, Drive, phone logs</li>
+        <li>Drafts time entries with billing narratives</li>
+        <li>Matches to matter codes via Clio API</li>
+        <li>Attorney reviews &amp; approves in seconds</li>
+        <li>Invoice auto-sent to client</li>
+      </ul>
+    </div>
+
+    <div class="case-card reveal">
+      <div class="case-num">02 / 05</div>
+      <div class="case-title">Voice AI Receptionist</div>
+      <div class="case-saving">Handles your front desk around the clock</div>
+      <p class="case-desc">24/7 front-line call handling. Our AI answers, classifies caller intent, books appointments, pulls matter status, and routes urgent calls. No receptionist needed.</p>
+      <ul class="case-steps">
+        <li>Answers &amp; classifies all incoming calls</li>
+        <li>Books consultations with conflict checks</li>
+        <li>SMS confirmations via Twilio</li>
+        <li>Transcript + summary → CRM + attorney inbox</li>
+        <li>Unclear intent transfers to live receptionist</li>
+      </ul>
+    </div>
+
+    <div class="case-card reveal">
+      <div class="case-num">03 / 05</div>
+      <div class="case-title">Dictation with Glaido</div>
+      <div class="case-saving">Recovers hours of missed admin every week</div>
+      <p class="case-desc">Attorney speaks, AI listens. Voice notes are instantly converted into structured case summaries, follow-up tasks, and client update emails. No typing required.</p>
+      <ul class="case-steps">
+        <li>Glaido voice-to-text transcription</li>
+        <li>AI formats by output type (5 routes)</li>
+        <li>OSCOLA citations for court filings</li>
+        <li>Time auto-logged to matter code</li>
+        <li>Archived to Drive + shared to Slack</li>
+      </ul>
+    </div>
+
+    <div class="case-card reveal">
+      <div class="case-num">04 / 05</div>
+      <div class="case-title">AI Document Retrieval (RAG)</div>
+      <div class="case-saving">Finds answers in seconds, not hours of searching</div>
+      <p class="case-desc">Every brief, contract, email, and deposition: searchable with a plain English question. Our AI expands the query, searches across the firm's knowledge base, and synthesises a cited answer.</p>
+      <ul class="case-steps">
+        <li>AI rewrites &amp; expands search query</li>
+        <li>Vector search across 5 document collections</li>
+        <li>Re-ranks &amp; synthesises with source citations</li>
+        <li>Low-confidence results escalate to partner</li>
+        <li>Delivered via Slack or email</li>
+      </ul>
+    </div>
+
+    <div class="case-card reveal">
+      <div class="case-num">05 / 05</div>
+      <div class="case-title">Contract Review: Firm Playbook</div>
+      <div class="case-saving">Partners review only what needs their attention</div>
+      <p class="case-desc">Every clause checked against your firm's preferred terms automatically. Our AI produces a severity-scored redline with plain-English explanations. Partners only review flagged issues.</p>
+      <ul class="case-steps">
+        <li>Parses every clause: IP, indemnity, payment, law</li>
+        <li>Compares against firm playbook standards</li>
+        <li>Severity-scored issues with rationale</li>
+        <li>Redline assembled with plain-English notes</li>
+        <li>Partner accepts / modifies / rejects flagged items</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="process" id="process">
+  <div class="process-inner">
+    <div class="process-header reveal">
+      <p class="section-tag">Our Process</p>
+      <h2 class="section-title">We handle everything.<br>You just show up.</h2>
+      <div class="divider"></div>
+      <p style="font-size:15px;color:var(--text-dim);line-height:1.7;max-width:480px;margin-top:16px;">No tech knowledge needed. No disruption to your team. We come in, learn how your firm works, and build around you.</p>
+    </div>
+
+    <div class="process-steps">
+      <div class="process-step reveal">
+        <div class="step-num">01</div>
+        <div class="step-title">Intake Workflow Review</div>
+        <p class="step-desc">We map your current documentation processes, identify the highest-value automation opportunities, and recommend the right starting point for your firm size.</p>
+      </div>
+      <div class="process-step reveal">
+        <div class="step-num">02</div>
+        <div class="step-title">Build &amp; Integrate</div>
+        <p class="step-desc">We build your automation workflows and integrate them with your existing tools: Clio, Gmail, Google Drive, Slack. No disruption to your current operations.</p>
+      </div>
+      <div class="process-step reveal">
+        <div class="step-num">03</div>
+        <div class="step-title">Staff Training</div>
+        <p class="step-desc">A hands-on session for your team covering how each automation works, what to expect, and how to get the most out of the system from day one.</p>
+      </div>
+      <div class="process-step reveal">
+        <div class="step-num">04</div>
+        <div class="step-title">Ongoing Optimisation</div>
+        <p class="step-desc">Monthly check-ins, performance reviews, and continuous improvements. We adapt as your firm grows and as AI capabilities evolve.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="pricing-inner">
+    <div class="pricing-header reveal">
+      <p class="section-tag">Pricing</p>
+      <h2 class="section-title">Find the right fit<br>for your firm</h2>
+      <div class="divider"></div>
+      <p>Every plan is a rolling monthly retainer. Cancel anytime. If your weekly recovery reports are not showing measurable time saved within the first 30 days, we keep working at no extra cost until they do. We mean that.</p>
+    </div>
+
+    <div class="plans-grid">
+      <!-- Tier 1 -->
+      <div class="plan reveal">
+        <div class="plan-tier">Tier 1</div>
+        <div class="plan-name">AI Starter</div>
+        <div class="plan-price">£997</div>
+        <div class="plan-price-sub">per month · rolling retainer</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>Intake workflow review and mapping</li>
+          <li>1 automated process built</li>
+          <li>1-hour handover &amp; staff training</li>
+          <li>Monthly check-in call</li>
+          <li>Ongoing minor tweaks &amp; optimisation</li>
+          <li>Priority email support</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <a href="#onboard" class="plan-btn">Get started</a>
+      </div>
+
+      <!-- Tier 2 -->
+      <div class="plan featured reveal">
+        <div class="plan-tier">Tier 2</div>
+        <div class="plan-name">AI Practice Pack</div>
+        <div class="plan-price">£2,497</div>
+        <div class="plan-price-sub">per month · rolling retainer</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>Full intake and enquiry workflow review</li>
+          <li>3 to 5 automated processes built &amp; integrated</li>
+          <li>Full team training session</li>
+          <li>30 days priority onboarding support</li>
+          <li>Monthly optimisation &amp; performance review</li>
+          <li>Quarterly strategy call</li>
+          <li>Dedicated Slack / WhatsApp support</li>
+        </ul>
+        <a href="#onboard" class="plan-btn">Get started</a>
+      </div>
+
+      <!-- Tier 3 -->
+      <div class="plan reveal">
+        <div class="plan-tier">Tier 3</div>
+        <div class="plan-name">AI Growth Partner</div>
+        <div class="plan-price">£4,997</div>
+        <div class="plan-price-sub">per month · ongoing partnership</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>Dedicated automation manager who knows your firm</li>
+          <li>Unlimited automations built &amp; maintained</li>
+          <li>Monthly ROI report: hours recovered &amp; cost saved</li>
+          <li>Proactive updates. Issues resolved before you notice.</li>
+          <li>Quarterly growth roadmap for your practice</li>
+          <li>Priority 2-hour response on any issue</li>
+          <li>We handle everything. Your team just works.</li>
+        </ul>
+        <a href="#onboard" class="plan-btn">Get started</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ONBOARDING TIMELINE -->
+<section class="onboarding" id="onboarding-steps">
+  <div class="onboarding-inner">
+    <div class="onboarding-header reveal">
+      <p class="section-tag">Onboarding</p>
+      <h2 class="section-title">From signed to live<br>within 30 days</h2>
+      <div class="divider"></div>
+      <p style="font-size:15px;color:var(--text-dim);line-height:1.7;max-width:480px;margin-top:16px;">From your first week, you receive a simple recovery report showing the hours and value already being returned to your team. You see the impact building before the 30 days are even up.</p>
+    </div>
+    <div class="onboarding-timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-week">Day 1 to 3</div>
+        <div class="timeline-title">Discovery and Review</div>
+        <p class="timeline-desc">We map your current workflows, identify pain points, and agree on which automation to build first for the fastest impact.</p>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-week">Day 4 to 14</div>
+        <div class="timeline-title">Build and Test</div>
+        <p class="timeline-desc">We build your first automation, integrate it with your existing tools, and test thoroughly before going live.</p>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-week">Day 15 to 21</div>
+        <div class="timeline-title">Go Live and Weekly Reports</div>
+        <p class="timeline-desc">Your first automation goes live. Each week from here you receive a short recovery report showing hours and value already returned to your team.</p>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-week">Day 22 to 30</div>
+        <div class="timeline-title">Review and Next Build</div>
+        <p class="timeline-desc">We review the results together using your recovery reports, then begin building the next automation from your plan.</p>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-week">Month 2 onward</div>
+        <div class="timeline-title">Ongoing Partnership</div>
+        <p class="timeline-desc">Continuous improvements, new automations added as your firm grows, and recovery reports continuing throughout.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ONBOARDING FORM -->
+<section class="form-section" id="onboard">
+  <div class="form-inner">
+    <div class="form-header reveal">
+      <p class="section-tag">Get Started</p>
+      <h2 class="section-title" style="color:var(--cream)">Tell us about<br>your firm</h2>
+      <div class="divider"></div>
+      <p>We will review your current workflow, identify where your team is losing time, and send you a personalised report within 48 hours. No call. No pitch. Just clarity.</p>
+    </div>
+
+    <div id="formWrap">
+      <div class="form-grid reveal">
+        <div class="form-group">
+          <label class="form-label">First name</label>
+          <input class="form-input" type="text" placeholder="James" id="fname">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last name</label>
+          <input class="form-input" type="text" placeholder="Morrison" id="lname">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input class="form-input" type="email" placeholder="james@yourfirm.co.uk" id="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone number</label>
+          <input class="form-input" type="tel" placeholder="+44 7700 900000" id="phone">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Firm name</label>
+          <input class="form-input" type="text" placeholder="Morrison &amp; Partners LLP" id="firm">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Practice area</label>
+          <select class="form-select" id="practice">
+            <option value="">Select area</option>
+            <option>Family Law</option>
+            <option>Conveyancing</option>
+            <option>Litigation</option>
+            <option>Immigration</option>
+            <option>Commercial</option>
+            <option>Criminal</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Firm size</label>
+          <select class="form-select" id="size">
+            <option value="">Select size</option>
+            <option>1 to 5 staff</option>
+            <option>6 to 15 staff</option>
+            <option>16 to 30 staff</option>
+            <option>31 to 50 staff</option>
+            <option>50+ staff</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Biggest documentation pain point</label>
+          <textarea class="form-textarea" placeholder="e.g. Fee earners spend too much time on file notes and client emails..." id="pain"></textarea>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Interested in (select plan)</label>
+          <select class="form-select" id="plan">
+            <option value="">Not sure yet</option>
+            <option>Tier 1: AI Starter (£997/mo)</option>
+            <option>Tier 2: AI Practice Pack (£2,497/mo)</option>
+            <option>Tier 3: AI Growth Partner (£4,997/mo)</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <button class="form-submit" onclick="submitForm()">Request my free Intake Workflow Review →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-success" id="formSuccess">
+      <div class="form-success-icon">✦</div>
+      <h3>We'll be in touch shortly</h3>
+      <p>Thank you. We will map your current enquiry process and send your personalised Intake Workflow Review within 48 hours. No call, no pitch.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-rule"></div>
+  <h2 class="cta-title reveal">Your team deserves to focus on<br><em class="script-em" style="font-size:1.1em;">the work that matters</em></h2>
+  <p class="cta-sub reveal">Most firms start seeing time recovered within the first two weeks. No tech team needed. No disruption. Just results.</p>
+  <a href="#onboard" class="btn-primary reveal">Get your free Intake Workflow Review →</a>
+</section>
+
+<!-- SAMUEL SECTION -->
+<section class="philosophy" style="background:var(--cream);">
+  <div class="philosophy-inner">
+    <div class="philosophy-script reveal">Built by someone who understands what it means to care</div>
+    <p class="philosophy-body reveal">
+      My name is Samuel Eyiaromi. I am 18 years old and I built Splash Workflows from Nigeria because I believe the firms that got the details right deserve a partner who does the same. I chose UK law firms because the work you do changes people's lives. That is not something to treat lightly. Every workflow I build, I build like my name depends on it. Because it does.
+    </p>
+    <p style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-top:8px;">Samuel Eyiaromi · Founder, Splash Workflows</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Splash <span>Workflows</span></div>
+  <div class="footer-copy">© 2026 Splash Workflows · AI Automation for UK Law Firms · Built for firms of 6 to 50 staff</div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 60);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Hamburger menu
+const hamburger = document.getElementById('navHamburger');
+const navLinks = document.getElementById('navLinks');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  navLinks.classList.toggle('open');
+});
+// Close menu on link click
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    navLinks.classList.remove('open');
+  });
+});
+
+// Form submit with full validation
+function submitForm() {
+  const fields = [
+    { id: 'fname',    label: 'First name' },
+    { id: 'lname',    label: 'Last name' },
+    { id: 'email',    label: 'Email address' },
+    { id: 'phone',    label: 'Phone number' },
+    { id: 'firm',     label: 'Firm name' },
+    { id: 'practice', label: 'Practice area' },
+    { id: 'size',     label: 'Firm size' },
+  ];
+
+  const missing = fields.filter(f => !document.getElementById(f.id).value.trim());
+  if (missing.length) {
+    alert('Please complete: ' + missing.map(f => f.label).join(', '));
+    return;
+  }
+
+  const email = document.getElementById('email').value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+
+  const data = {
+    first_name: document.getElementById('fname').value.trim(),
+    last_name: document.getElementById('lname').value.trim(),
+    email: email,
+    phone: document.getElementById('phone').value.trim(),
+    firm_name: document.getElementById('firm').value.trim(),
+    practice_area: document.getElementById('practice').value,
+    firm_size: document.getElementById('size').value,
+    pain_point: document.getElementById('pain').value.trim(),
+    interested_plan: document.getElementById('plan').value
+  };
+
+  fetch('https://formspree.io/f/xnjygygb', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(() => {
+    document.getElementById('formWrap').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  })
+  .catch(() => {
+    document.getElementById('formWrap').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  });
+}
+</script>
+
+<!-- PRIVACY POLICY MODAL -->
+<div class="legal-modal-overlay" id="modal-privacy">
+  <div class="legal-modal">
+    <button class="legal-modal-close" onclick="closeModal('privacy')">✕</button>
+    <h2>Privacy Policy</h2>
+    <p>Last updated: June 2026</p>
+    <h3>Who We Are</h3>
+    <p>Splash Workflows provides done-for-you AI automation services for UK law firms. Our contact email is splashworkflows@gmail.com.</p>
+    <h3>What Data We Collect</h3>
+    <p>When you complete our Free Intake Workflow Review, we collect your name, firm name, email address, and information about your current workflows. We do not collect sensitive client data belonging to your firm's clients.</p>
+    <h3>How We Use Your Data</h3>
+    <ul>
+      <li>To deliver the Intake Workflow Review you requested</li>
+      <li>To communicate with you about our services</li>
+      <li>To improve our service offering</li>
+    </ul>
+    <h3>Data Storage</h3>
+    <p>Your data is stored securely using industry-standard encryption. We do not sell your data to third parties under any circumstances.</p>
+    <h3>Your Rights</h3>
+    <p>Under UK GDPR, you have the right to access, correct, or delete your personal data at any time. Contact us at splashworkflows@gmail.com to exercise these rights.</p>
+    <h3>Contact</h3>
+    <p>For any privacy-related questions, contact: splashworkflows@gmail.com</p>
+  </div>
+</div>
+
+<!-- TERMS OF SERVICE MODAL -->
+<div class="legal-modal-overlay" id="modal-terms">
+  <div class="legal-modal">
+    <button class="legal-modal-close" onclick="closeModal('terms')">✕</button>
+    <h2>Terms of Service</h2>
+    <p>Last updated: June 2026</p>
+    <h3>Services</h3>
+    <p>Splash Workflows provides AI automation implementation services for UK law firms on a monthly retainer basis. All services are delivered remotely.</p>
+    <h3>Payment Terms</h3>
+    <p>Retainers are billed monthly in advance. You may cancel at any time with 30 days written notice. If your weekly recovery reports are not showing measurable time saved within the first 30 days, we continue working at no extra cost until they do.</p>
+    <h3>Intellectual Property</h3>
+    <p>All automation workflows built for your firm are owned by your firm upon full payment. Splash Workflows retains no rights to your firm's data or processes.</p>
+    <h3>Limitation of Liability</h3>
+    <p>Splash Workflows is not liable for decisions made by your firm on the basis of automated outputs. All AI-generated content must be reviewed and approved by a qualified solicitor before use with clients.</p>
+    <h3>Governing Law</h3>
+    <p>These terms are governed by the laws of England and Wales.</p>
+    <h3>Contact</h3>
+    <p>splashworkflows@gmail.com</p>
+  </div>
+</div>
+
+<!-- GDPR MODAL -->
+<div class="legal-modal-overlay" id="modal-gdpr">
+  <div class="legal-modal">
+    <button class="legal-modal-close" onclick="closeModal('gdpr')">✕</button>
+    <h2>GDPR Compliance</h2>
+    <p>Last updated: June 2026</p>
+    <h3>Our Commitment</h3>
+    <p>Splash Workflows is committed to full compliance with the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.</p>
+    <h3>Lawful Basis for Processing</h3>
+    <p>We process personal data on the basis of legitimate interest and, where required, explicit consent. You may withdraw consent at any time.</p>
+    <h3>Data Minimisation</h3>
+    <p>We collect only the data necessary to deliver the services you have requested. We do not retain data beyond the period necessary for service delivery.</p>
+    <h3>Your Rights Under UK GDPR</h3>
+    <ul>
+      <li>Right to access your personal data</li>
+      <li>Right to rectification of inaccurate data</li>
+      <li>Right to erasure</li>
+      <li>Right to restrict processing</li>
+      <li>Right to data portability</li>
+      <li>Right to object to processing</li>
+    </ul>
+    <h3>Data Transfers</h3>
+    <p>We do not transfer personal data outside the UK or EU without appropriate safeguards in place.</p>
+    <h3>Contact</h3>
+    <p>For GDPR enquiries: splashworkflows@gmail.com</p>
+  </div>
+</div>
+
+<!-- DPA MODAL -->
+<div class="legal-modal-overlay" id="modal-dpa">
+  <div class="legal-modal">
+    <button class="legal-modal-close" onclick="closeModal('dpa')">✕</button>
+    <h2>Data Processing Agreement</h2>
+    <p>Last updated: June 2026</p>
+    <h3>Parties</h3>
+    <p>This agreement is between Splash Workflows (Processor) and the law firm engaging our services (Controller).</p>
+    <h3>Subject Matter</h3>
+    <p>Splash Workflows processes data on behalf of your firm solely to deliver the automation services described in your retainer agreement.</p>
+    <h3>Our Obligations as Processor</h3>
+    <ul>
+      <li>Process data only on documented instructions from your firm</li>
+      <li>Ensure all personnel handling data are bound by confidentiality</li>
+      <li>Implement appropriate technical and organisational security measures</li>
+      <li>Assist your firm in fulfilling its obligations under UK GDPR</li>
+      <li>Delete or return all personal data upon termination of services</li>
+      <li>Provide all information necessary to demonstrate compliance</li>
+    </ul>
+    <h3>Security Measures</h3>
+    <p>We use encrypted storage, access controls, and regular security reviews to protect all data processed on your firm's behalf.</p>
+    <h3>Sub-processors</h3>
+    <p>We will notify you of any changes to sub-processors and obtain your approval before engaging new ones.</p>
+    <h3>Contact</h3>
+    <p>splashworkflows@gmail.com</p>
+  </div>
+</div>
+
+<script>
+function openModal(name) {
+  document.getElementById('modal-' + name).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(name) {
+  document.getElementById('modal-' + name).classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.legal-modal-overlay').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    if (e.target === el) {
+      el.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+});
+</script>
+
+</body>
+</html>
